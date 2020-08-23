@@ -1,0 +1,13 @@
+{
+  "name": "rego",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "cross-env DEBUG=be:* NODE_ENV=development node ./be/bin/www",
+    "serve": "cd fe && yarn serve",
+    "pr": "cd fe && yarn && yarn build && cd ../be && yarn && cd .. && cross-env NODE_ENV=production PORT=80 node ./be/bin/www",
+    "pm2": "cd fe && yarn && yarn build && cd ../be && yarn && cd .. && pm2 start --env pr"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.2"
+  }
+}
