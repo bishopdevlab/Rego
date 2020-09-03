@@ -6,13 +6,13 @@
         <v-card>
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">{{user.id}}</h3>
+              <h3 class="headline mb-0">{{user.name}}</h3>
             </div>
           </v-card-title>
           <v-divider light></v-divider>
           <v-card-title primary-title>
             <div>
-              <div>이름: {{user.name}}</div>
+              <div>이메일: {{user.email}}</div>
               <div>권한: {{user.lv}}</div>
               <div>나이: {{user.age}}</div>
               <div>로그인 횟수: {{user.inCnt}}</div>
@@ -137,8 +137,8 @@ export default {
           if (!e.response) this.$store.commit('pop', { msg: e.message, color: 'warning' })
         })
     },
-    delUser (id) {
-      this.$axios.delete(`manage/user/${id}`)
+    delUser (email) {
+      this.$axios.delete(`manage/user/${email}`)
         .then((r) => {
           this.$store.commit('pop', { msg: '사용자 삭제 완료', color: 'success' })
           this.getUsers()

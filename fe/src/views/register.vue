@@ -10,18 +10,18 @@
           <v-card-text>
             <v-form>
               <v-text-field
-                v-validate="'required|min:4|max:20'"
-                v-model="form.id"
-                :counter="20"
-                :error-messages="errors.collect('id')"
-                label="아이디"
-                data-vv-name="id"
+                v-validate="'required|email'"
+                v-model="form.email"
+                :counter="40"
+                :error-messages="errors.collect('email')"
+                label="이메일"
+                data-vv-name="email"
                 required
               ></v-text-field>
               <v-text-field
-                v-validate="'required|min:6|max:40'"
+                v-validate="'required|min:6|max:20'"
                 v-model="form.pwd"
-                :counter="40"
+                :counter="20"
                 :error-messages="errors.collect('pwd')"
                 label="비밀번호"
                 data-vv-name="pwd"
@@ -29,29 +29,16 @@
                 type="password"
               ></v-text-field>
               <v-text-field
-                v-validate="'required|min:1|max:40'"
+                v-validate="'required|min:1|max:20'"
                 v-model="form.name"
-                :counter="40"
+                :counter="20"
                 :error-messages="errors.collect('name')"
                 label="이름"
                 data-vv-name="name"
                 required
               ></v-text-field>
-
-              <v-checkbox
-                v-validate="'required'"
-                v-model="agree"
-                :error-messages="errors.collect('agree')"
-                value="1"
-                label="약관동의: 링크"
-                data-vv-name="agree"
-                type="checkbox"
-                required
-              ></v-checkbox>
-
               <v-spacer></v-spacer>
               <v-btn @click="register()">가입</v-btn>
-              <v-btn @click="clear">초기화</v-btn>
               <v-btn @click="closeRegister">닫기</v-btn>
             </v-form>
           </v-card-text>
@@ -84,7 +71,7 @@ export default {
   data: () => ({
     invisible: '',
     form: {
-      id: '',
+      email: '',
       name: '',
       pwd: ''
     },
@@ -93,14 +80,12 @@ export default {
       msg: '',
       color: 'warning'
     },
-    agree: null,
     dictionary: {
       messages: ko.messages,
       attributes: {
-        id: '아이디',
+        email: '이메일',
         pwd: '비밀번호',
-        name: '이름',
-        agree: '약관동의'
+        name: '이름'
       },
       custom: {
       }
@@ -140,13 +125,6 @@ export default {
       this.sb.act = true
       this.sb.msg = m
       this.sb.color = cl
-    },
-    clear () {
-      this.form.id = ''
-      this.form.pwd = ''
-      this.form.name = ''
-      this.agree = null
-      this.$validator.reset()
     },
     closeRegister () {
       this.$router.push('../')

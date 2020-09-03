@@ -9,7 +9,7 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field prepend-icon="person" v-model="form.id" label="아이디" type="text" ref=idField></v-text-field>
+              <v-text-field prepend-icon="person" v-model="form.email" label="이메일" type="text" ref=idField></v-text-field>
               <v-text-field prepend-icon="lock" v-model="form.pwd" label="비밀번호" type="password" @keyup.enter="signIn"></v-text-field>
               <v-checkbox
                 v-model="form.remember"
@@ -36,7 +36,7 @@ export default {
   data () {
     return {
       form: {
-        id: '',
+        email: '',
         pwd: '',
         remember: false
       }

@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title primary-title>
-      <h3 class="headline mb-0">{{user.id}}</h3>
+      <h3 class="headline mb-0">{{user.email}}</h3>
     </v-card-title>
     <v-divider light></v-divider>
     <v-card-text>

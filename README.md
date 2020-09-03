@@ -105,7 +105,7 @@ MENV Stack
 module.exports = {
   dbUrl: 'mongodb://localhost:27017/rego',
   admin: {
-    id: 'admin',
+    email: 'admin@rego.com',
     pwd: 'manager',
     name: '관리자'
   },

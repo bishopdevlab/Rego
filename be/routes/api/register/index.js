@@ -5,13 +5,13 @@ const User = require('../../../models/users')
 
 router.post('/', (req, res) => {
   const u = req.body
-  if (!u.id) throw createError(400, '아이디가 없습니다')
+  if (!u.email) throw createError(400, '이메일이 없습니다')
   if (!u.pwd) throw createError(400, '비밀번호가 없습니다')
   if (!u.name) throw createError(400, '이름이 없습니다.')
 
-  User.findOne({ id: u.id })
+  User.findOne({ email: u.email })
     .then((r) => {
-      if (r) throw new Error('이미 등록되어 있는 아이디입니다.')
+      if (r) throw new Error('이미 등록되어 있는 이메일입니다.')
       return User.create(u)
     })
     .then((r) => {

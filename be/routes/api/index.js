@@ -10,9 +10,9 @@ router.use('/site', require('./site'))
 
 const verifyToken = (t) => {
   return new Promise((resolve, reject) => {
-    if (!t) resolve({ id: 'guest', name: '손님', lv: 3 })
+    if (!t) resolve({ email: 'guest@rego.com', name: '손님', lv: 3 })
     if ((typeof t) !== 'string') reject(new Error('문자가 아닌 토큰 입니다.'))
-    if (t.length < 10) resolve({ id: 'guest', name: '손님', lv: 3 })
+    if (t.length < 10) resolve({ email: 'guest@rego.com', name: '손님', lv: 3 })
     jwt.verify(t, cfg.jwt.secretKey, (err, v) => {
       if (err) reject(err)
       resolve(v)
@@ -20,7 +20,7 @@ const verifyToken = (t) => {
   })
 }
 
-const signToken = (_id, id, lv, name, exp) => {
+const signToken = (_id, email, lv, name, exp) => {
   return new Promise((resolve, reject) => {
     const o = {
       issuer: cfg.jwt.issuer,
@@ -29,7 +29,7 @@ const signToken = (_id, id, lv, name, exp) => {
       algorithm: cfg.jwt.algorithm,
       expiresIn: exp
     }
-    jwt.sign({ _id, id, lv, name }, cfg.jwt.secretKey, o, (err, token) => {
+    jwt.sign({ _id, email, lv, name }, cfg.jwt.secretKey, o, (err, token) => {
       if (err) reject(err)
       resolve(token)
     })
@@ -43,7 +43,7 @@ const getToken = async(t) => {
   const expSec = (vt.exp - vt.iat)
   if (diff > expSec / cfg.jwt.expiresInDiv) return { user: vt, token: null }
 
-  const nt = await signToken(vt._id, vt.id, vt.lv, vt.name, expSec)
+  const nt = await signToken(vt._id, vt.email, vt.lv, vt.name, expSec)
   vt = await verifyToken(nt)
   return { user: vt, token: nt }
 }

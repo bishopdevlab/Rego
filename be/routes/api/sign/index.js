@@ -6,7 +6,7 @@ const request = require('request')
 const cfg = require('../../../../config')
 const User = require('../../../models/users')
 
-const signToken = (_id, id, lv, name, rmb) => {
+const signToken = (_id, email, lv, name, rmb) => {
   return new Promise((resolve, reject) => {
     const o = {
       issuer: cfg.jwt.issuer,
@@ -15,7 +15,7 @@ const signToken = (_id, id, lv, name, rmb) => {
       algorithm: cfg.jwt.algorithm
     }
     if (rmb) o.expiresIn = cfg.jwt.expiresInRemember
-    jwt.sign({ _id, id, lv, name }, cfg.jwt.secretKey, o, (err, token) => {
+    jwt.sign({ _id, email, lv, name }, cfg.jwt.secretKey, o, (err, token) => {
       if (err) reject(err)
       resolve(token)
     })
@@ -23,20 +23,20 @@ const signToken = (_id, id, lv, name, rmb) => {
 }
 
 router.post('/in', (req, res, next) => {
-  const { id, pwd, remember } = req.body
-  if (!id) throw createError(400, '아이디가 없습니다')
+  const { email, pwd, remember } = req.body
+  if (!email) throw createError(400, '이메일이 없습니다')
   if (!pwd) throw createError(400, '비밀번호가 없습니다')
   if (remember === undefined) throw createError(400, '기억하기가 없습니다.')
 
   let u = {}
-  User.findOne({ id }).lean()
+  User.findOne({ email }).lean()
     .then((r) => {
-      if (!r) throw new Error('존재하지 않는 아이디입니다.')
+      if (!r) throw new Error('존재하지 않는 이메일입니다.')
       const p = crypto.scryptSync(pwd, r._id.toString(), 64, { N: 1024 }).toString('hex')
       if (r.pwd !== p) throw new Error('비밀번호가 틀립니다.')
       delete r.pwd
       u = r
-      return signToken(r._id, r.id, r.lv, r.name, remember)
+      return signToken(r._id, r.email, r.lv, r.name, remember)
     })
     .then((r) => {
       res.send({ success: true, token: r, user: u })
@@ -48,11 +48,11 @@ router.post('/in', (req, res, next) => {
 
 router.post('/up', (req, res, next) => {
   const u = req.body
-  if (!u.id) throw createError(400, '아이디가 없습니다')
+  if (!u.email) throw createError(400, '이메일이 없습니다')
   if (!u.pwd) throw createError(400, '비밀번호가 없습니다')
   if (!u.name) throw createError(400, '이름이 없습니다')
 
-  User.findOne({ id: u.id })
+  User.findOne({ email: u.email })
     .then((r) => {
       if (r) throw new Error('이미 등록되어 있는 아이디입니다')
       return User.create(u)

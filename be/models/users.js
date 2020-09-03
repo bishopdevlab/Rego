@@ -7,7 +7,7 @@ mongoose.set('useFindAndModify', false)
 const userSchema = new mongoose.Schema({
   name: { type: String, default: '' },
   age: { type: Number, default: 1 },
-  id: { type: String, default: '', unique: true, index: true },
+  email: { type: String, default: '', unique: true, index: true },
   pwd: { type: String, default: '' },
   lv: { type: Number, default: 2 },
   inCnt: { type: Number, default: 0 },
@@ -17,14 +17,14 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema)
 
-User.findOne({ id: cfg.admin.id })
+User.findOne({ email: cfg.admin.email })
   .then((r) => {
-    if (!r) return User.create({ id: cfg.admin.id, pwd: cfg.admin.pwd, name: cfg.admin.name, lv: 0 })
+    if (!r) return User.create({ email: cfg.admin.email, pwd: cfg.admin.pwd, name: cfg.admin.name, lv: 0 })
     return Promise.resolve(r)
   })
   .then((r) => {
     if (r.pwd !== cfg.admin.pwd) return Promise.resolve(null)
-    console.log(`admin:${r.id} created!`)
+    console.log(`admin:${r.email} created!`)
     const pwd = crypto.scryptSync(r.pwd, r._id.toString(), 64, { N: 1024 }).toString('hex')
     return User.updateOne({ _id: r._id }, { $set: { pwd } })
   })
